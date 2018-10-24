@@ -15,7 +15,8 @@
         <div style="width: 100%;height: 100%;display: flex;flex-direction: column">
             <div style="width: 100%;height: 90px;display: flex;align-items: flex-end;flex-direction: row;align-items:center;justify-content: space-between">
                 <div>
-                    <div id="selectCount" style="display: flex;flex-direction: column;align-items: center;margin-left: 20px">
+                    <div id="selectCount"
+                         style="display: flex;flex-direction: column;align-items: center;margin-left: 20px">
                         <select id="select"
                                 style="background-color:#fafdfe;height:28px;  width:90px;  line-height:28px;  border:1px solid #9bc0dd;  -moz-border-radius:2px;  -webkit-border-radius:2px;  border-radius:2px; ">
                             <option value="1">1</option>
@@ -49,21 +50,23 @@
                         <input v-bind:id="index" style="border:none;border-bottom: 1px solid #bbbbbb;width: 70px"/>
                         <i name="answers" style="margin-right: 25px;margin-left: 25px" v-bind:id="index+10">X</i>
                         <div name="answers">
-                        <span>正确答案：</span>
-                        <span>{{ari.answer}}</span>
+                            <span>正确答案：</span>
+                            <span>{{ari.answer}}</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="result" style="width: 100%;height:85px;display: flex;flex-direction: row;justify-content: space-between;align-items: center;padding: 20px;box-sizing: border-box">
+            <div id="result"
+                 style="width: 100%;height:85px;display: flex;flex-direction: row;justify-content: space-between;align-items: center;padding: 20px;box-sizing: border-box">
                 <div>
-                <div id="text">
-                    <span>您答对了<span id="right">3</span>道题，答错了<span id="error">2</span>道题</span><br/>
-                    <span>答题正确率为<span id="rate">60%</span></span>
-                </div>
+                    <div id="text">
+                        <span>您答对了<span id="right">3</span>道题，答错了<span id="error">2</span>道题</span><br/>
+                        <span>答题正确率为<span id="rate">60%</span></span>
+                    </div>
                 </div>
                 <div style="display: flex;align-items: flex-end" id="commit">
-                    <button onclick="commitAnswer()" style="border:none;height: 45px;width:100px;background-color: rgba(37,155,36,100);color: white;border-radius: 12px;font-size: 17px;margin-right: 5px">
+                    <button onclick="commitAnswer()"
+                            style="border:none;height: 45px;width:100px;background-color: rgba(37,155,36,100);color: white;border-radius: 12px;font-size: 17px;margin-right: 5px">
                         提交
                     </button>
                     <button id="skin" onclick="changeSkin()"
@@ -80,26 +83,21 @@
     var questions = new Array();
     var vue;
     var t;
+    var skin=0;
 
     function getArithmetic() {
-//        alert("22")
-//        selectTest=$("#select");
-//        alert(selectTest.option[selectTest.selectedIndex].value);
         var option = $("#select option:selected").text();
         $.ajax({
             type: 'GET',
             url: "/hello?count=" + option,
             success: function (data) {
-//                alert(JSON.stringify(data));
                 var jsonData = JSON.stringify(data);
                 var obj = JSON.parse(jsonData);
                 array = obj;
                 for (var p in obj) {//遍历json对象的每个key/value对,p为key
                     var ob = {"question": p.toString(), "answer": obj[p]}
-//                    alert(p.toString())
                     questions.push(ob);
                 }
-//                alert(questions[1].question);
                 vue = new Vue({
                     el: '#test',
                     data: {
@@ -131,22 +129,29 @@
         $("#commit").hide();
         $("#text").hide()
     })
-    
+
     function changeSkin() {
-        $("#boss").css("background-color","#2b2b2b");
-        $("#boss").addClass("changeSkin");
+        if (skin==0){
+            $("#boss").css("background-color", "#2b2b2b");
+            $("#boss").addClass("changeSkin");
+            skin=1;
+        }else {
+            $("#boss").css("background-color", "white");
+            $("#boss").removeClass("changeSkin");
+            skin=0;
+        }
     }
-    
+
     function commitAnswer() {
-        var rightCount=0;
-        var errorCount=0;
-        for (var i in questions){
-            $("#"+i).attr("disabled","disabled");
-            if (questions[i].answer==$("#"+i).val()){
-                var num=parseInt(i)+10;
-                $("#"+num.toString()).text("√");
+        var rightCount = 0;
+        var errorCount = 0;
+        for (var i in questions) {
+            $("#" + i).attr("disabled", "disabled");
+            if (questions[i].answer == $("#" + i).val()) {
+                var num = parseInt(i) + 10;
+                $("#" + num.toString()).text("√");
                 rightCount++;
-            }else {
+            } else {
                 errorCount++;
             }
         }
@@ -156,11 +161,11 @@
         $("#text").show();
         $("#right").text(rightCount);
         $("#error").text(errorCount);
-        $("#rate").text((rightCount/(rightCount+errorCount)*100)+"%")
+        $("#rate").text((rightCount / (rightCount + errorCount) * 100) + "%")
     }
 </script>
 <style>
-    .changeSkin{
+    .changeSkin {
         color: #f5a528;
     }
 </style>
